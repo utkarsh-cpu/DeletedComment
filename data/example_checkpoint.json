@@ -1,0 +1,22 @@
+{
+  "checkpoint_id": "example_checkpoint_1",
+  "timestamp": "2024-01-01T12:00:00Z",
+  "component": "example_component",
+  "operation": "example_operation",
+  "progress": {
+    "stage": "processing",
+    "file_index": 3
+  },
+  "processed_files": [
+    "file1.json",
+    "file2.json"
+  ],
+  "current_file": "file3.json",
+  "current_position": 5000,
+  "total_records": 20000,
+  "processed_records": 8000,
+  "error_count": 1,
+  "metadata": {
+    "batch_size": 1000
+  }
+}

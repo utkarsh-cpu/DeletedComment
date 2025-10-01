@@ -1,0 +1,33 @@
+# Testing dependencies for the deleted comment dataset project
+
+# Core testing framework
+pytest>=7.0.0
+pytest-cov>=4.0.0
+pytest-xdist>=3.0.0  # For parallel test execution
+pytest-mock>=3.10.0
+
+# Performance and memory testing
+psutil>=5.9.0
+memory-profiler>=0.60.0
+
+# Data testing
+pandas>=1.5.0
+pyarrow>=10.0.0
+
+# Mocking and test utilities
+responses>=0.22.0  # For HTTP mocking
+freezegun>=1.2.0   # For time mocking
+
+# Google API testing (for drive uploader tests)
+google-api-python-client>=2.70.0
+google-auth-httplib2>=0.1.0
+google-auth-oauthlib>=0.8.0
+
+# Additional test utilities
+factory-boy>=3.2.0  # For test data generation
+faker>=15.0.0       # For fake data generation
+
+# Code quality (optional but recommended)
+flake8>=5.0.0
+black>=22.0.0
+isort>=5.10.0

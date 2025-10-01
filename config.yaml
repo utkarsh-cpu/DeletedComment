@@ -1,0 +1,180 @@
+# Reddit Deleted Comment Dataset Processing Configuration
+# This configuration file contains all parameters for the Reddit deleted comment
+# dataset processing pipeline. Environment variables can override sensitive values.
+
+# Processing Configuration
+processing:
+  chunk_size: 100000                    # Number of records to process in each chunk
+  max_workers: 4                        # Maximum number of worker threads
+  memory_limit_gb: 8                    # Memory limit for processing (GB)
+  batch_size: 10000                     # Batch size for database operations
+  strict_validation: false              # Enable strict data validation
+  parallel_processing: true             # Enable parallel processing where possible
+
+# Data Source Configuration
+data_source:
+  torrent_url: ""                       # Reddit dataset URL from Academic Torrents (required)
+  download_path: "./data/raw"           # Directory for downloaded files
+  extract_path: "./data/extracted"      # Directory for extracted files
+  verify_checksums: true                # Verify file integrity using checksums
+  checksum_algorithm: "sha256"          # Algorithm for checksum verification
+  download_timeout: 3600                # Download timeout in seconds
+  max_file_size_gb: 50                  # Maximum expected file size (GB)
+
+# Storage Configuration
+storage:
+  compression: "snappy"                 # Parquet compression: snappy, gzip, lz4, brotli, zstd
+  parquet_version: "2.6"                # Parquet format version
+  auto_cleanup: true                    # Automatically clean up temporary files
+  backup_enabled: false                 # Create backup copies of processed files
+  output_path: "./data/processed"       # Directory for output Parquet files
+  temp_path: "./data/temp"              # Directory for temporary files
+  chunk_size_mb: 256                    # Size of Parquet file chunks (MB)
+  row_group_size: 50000                 # Number of rows per Parquet row group
+
+# Google Drive Configuration
+google_drive:
+  credentials_path: "./credentials.json" # Path to Google API credentials file
+  token_path: "./token.json"            # Path to store OAuth2 tokens
+  folder_name: "Reddit_Deleted_Comments" # Folder name on Google Drive
+  upload_timeout: 300                   # Upload timeout per file (seconds)
+  retry_attempts: 3                     # Number of upload retry attempts
+  chunk_upload_size: 10485760           # Upload chunk size (10MB)
+  create_folder_structure: true         # Create organized folder structure
+  share_files: false                    # Make uploaded files publicly shareable
+  delete_after_upload: false            # Delete local files after successful upload
+
+# Classification Configuration
+classification:
+  deleted_markers:                      # Markers indicating user-deleted comments
+    - "[deleted]"
+  removed_markers:                      # Markers indicating moderator-removed comments
+    - "[removed]"
+  deleted_authors:                      # Author names indicating deleted accounts
+    - "[deleted]"
+  confidence_threshold: 0.8             # Minimum confidence for classification
+  include_context: true                 # Include parent comment context
+  extract_removal_reason: true          # Attempt to extract removal reasons
+
+# Metadata Extraction Configuration
+metadata:
+  include_parent_context: true          # Include parent comment text
+  max_context_length: 500               # Maximum characters for context
+  normalize_text: true                  # Normalize text encoding and formatting
+  extract_timestamps: true              # Convert timestamps to standard format
+  include_scores: true                  # Include comment scores if available
+  subreddit_mapping: {}                 # Custom subreddit name mappings
+
+# Machine Learning Labels Configuration
+ml_labels:
+  toxic_patterns:                       # Patterns for toxic content labeling
+    - "hate speech"
+    - "harassment"
+    - "threats"
+  spam_patterns:                        # Patterns for spam content labeling
+    - "promotional"
+    - "repetitive"
+    - "off-topic"
+  rule_violation_patterns:              # Patterns for rule violations
+    - "doxxing"
+    - "brigading"
+    - "vote manipulation"
+  default_label: "unknown"              # Default label when pattern matching fails
+
+# Logging Configuration
+logging:
+  level: "INFO"                         # Log level: DEBUG, INFO, WARNING, ERROR, CRITICAL
+  file_path: "./logs/processing.log"    # Path to log file
+  max_size_mb: 100                      # Maximum log file size (MB)
+  backup_count: 5                       # Number of backup log files to keep
+  console_output: true                  # Enable console logging
+  progress_interval: 10                 # Seconds between progress log updates
+  detailed_errors: true                 # Include detailed error information
+  log_memory_usage: true                # Log memory usage statistics
+
+# Error Handling Configuration
+error_handling:
+  retry_attempts: 3                     # Number of retry attempts for failed operations
+  retry_delay: 1.0                      # Initial delay between retries (seconds)
+  exponential_backoff: true             # Use exponential backoff for retries
+  max_retry_delay: 60.0                 # Maximum delay between retries (seconds)
+  continue_on_error: true               # Continue processing other files on error
+  checkpoint_enabled: true              # Enable checkpoint system for recovery
+  checkpoint_interval: 10000            # Save checkpoint every N records
+  checkpoint_path: "./data/checkpoint.json" # Path to checkpoint file
+  error_log_path: "./logs/errors.log"   # Separate log file for errors
+
+# Resource Management
+resources:
+  disk_space_threshold_gb: 5            # Minimum free disk space (GB)
+  memory_warning_threshold: 0.8         # Memory usage warning threshold (0.0-1.0)
+  memory_critical_threshold: 0.95       # Memory usage critical threshold (0.0-1.0)
+  max_file_size_gb: 2                   # Maximum individual file size (GB)
+  temp_cleanup_interval: 3600           # Cleanup temporary files interval (seconds)
+  monitor_system_resources: true        # Enable system resource monitoring
+  gc_interval: 1000                     # Garbage collection interval (records)
+
+# Performance Optimization
+performance:
+  use_multiprocessing: true             # Enable multiprocessing where applicable
+  max_concurrent_downloads: 2           # Maximum concurrent downloads
+  io_buffer_size: 65536                 # I/O buffer size (bytes)
+  pandas_chunksize: 10000               # Pandas read chunk size
+  memory_map_files: true                # Use memory mapping for large files
+  optimize_memory: true                 # Enable memory optimization techniques
+
+# Validation Rules
+validation:
+  required_fields:                      # Required fields in Reddit data
+    - "id"
+    - "body"
+    - "author"
+    - "subreddit"
+    - "created_utc"
+  max_comment_length: 40000             # Maximum comment length (characters)
+  min_comment_length: 1                 # Minimum comment length (characters)
+  valid_subreddit_pattern: "^[A-Za-z0-9_]+$" # Regex pattern for valid subreddit names
+  timestamp_range:                      # Valid timestamp range
+    start: "2005-01-01"                 # Reddit launch date
+    end: "2024-12-31"                   # Future cutoff date
+
+# Output Schema Configuration
+output_schema:
+  user_deleted_columns:                 # Columns for user-deleted dataset
+    - "id"
+    - "comment_text"
+    - "subreddit"
+    - "timestamp"
+    - "removal_type"
+    - "target_label"
+    - "parent_id"
+    - "thread_id"
+    - "score"
+  moderator_removed_columns:            # Columns for moderator-removed dataset
+    - "id"
+    - "comment_text"
+    - "subreddit"
+    - "timestamp"
+    - "removal_type"
+    - "target_label"
+    - "parent_id"
+    - "thread_id"
+    - "score"
+    - "removal_reason"
+  data_types:                           # Data type specifications
+    id: "string"
+    comment_text: "string"
+    subreddit: "string"
+    timestamp: "timestamp[ns]"
+    removal_type: "category"
+    target_label: "category"
+    score: "int32"
+
+# Development and Testing
+development:
+  debug_mode: false                     # Enable debug mode
+  sample_size: 0                        # Process only N records (0 = all)
+  skip_download: false                  # Skip download for testing
+  skip_upload: false                    # Skip upload for testing
+  mock_api_calls: false                 # Mock external API calls
+  test_data_path: "./test_data"         # Path to test data files

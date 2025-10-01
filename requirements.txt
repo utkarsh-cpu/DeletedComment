@@ -1,0 +1,35 @@
+# Core data processing dependencies
+pandas>=2.0.0
+pyarrow>=12.0.0
+numpy>=1.24.0
+
+# HTTP requests and downloading
+requests>=2.31.0
+urllib3>=2.0.0
+
+# Google Drive API integration
+google-api-python-client>=2.100.0
+google-auth-httplib2>=0.2.0
+google-auth-oauthlib>=1.0.0
+
+# Configuration management
+PyYAML>=6.0
+
+# Progress tracking and monitoring
+tqdm>=4.65.0
+
+# Logging and utilities
+python-dateutil>=2.8.0
+psutil>=5.9.0
+
+# File compression and extraction
+py7zr>=0.20.0
+
+# Optional: For torrent handling (if needed)
+libtorrent>=2.0.0
+
+# Development and testing dependencies
+pytest>=7.4.0
+pytest-cov>=4.1.0
+black>=23.0.0
+flake8>=6.0.0
