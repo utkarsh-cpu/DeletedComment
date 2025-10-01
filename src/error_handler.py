@@ -610,7 +610,7 @@ class ErrorRecoveryManager:
         while retry_count <= max_retries:
             try:
                 yield
-                break  # Success, exit retry loop
+                return  # Success, exit context manager
                 
             except Exception as e:
                 context = ErrorContext(
@@ -634,13 +634,14 @@ class ErrorRecoveryManager:
                 if recovery_action == RecoveryAction.ABORT:
                     raise
                 elif recovery_action == RecoveryAction.SKIP:
-                    break
+                    return  # Skip and exit context manager
                 elif recovery_action == RecoveryAction.RETRY:
                     retry_count += 1
                     if retry_count > max_retries:
                         raise
+                    # Continue the while loop for retry
                 else:
-                    break
+                    return  # Default: exit context manager
     
     def _generate_recovery_suggestions(self, error: Exception) -> List[str]:
         """Generate recovery suggestions based on error type."""

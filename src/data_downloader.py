@@ -469,8 +469,10 @@ class DataDownloader:
         # Get the name of the downloaded file
         torrent_info = handle.get_torrent_info()
         files = torrent_info.files()
-        if files:
-            downloaded_file = os.path.join(output_path, files[0].path)
+        if files.num_files() > 0:
+            # Get the first file's path using proper file_storage iteration
+            file_entry = files.at(0)
+            downloaded_file = os.path.join(output_path, file_entry.path)
             return downloaded_file
         else:
             # If no files are in the torrent info, we can't return a specific file path
