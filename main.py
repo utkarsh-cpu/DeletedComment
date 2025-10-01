@@ -166,16 +166,19 @@ class PipelineOrchestrator:
             ComponentType.DATA_DOWNLOADER,
             "download_and_extract"
         ):
-            self.progress_monitor.update_progress("download", 0, 1)
+            self.progress_monitor.start_stage("download", 1)
+            self.progress_monitor.update_progress(0, 1)
             self.logger_system.log_info(
                 ComponentType.DATA_DOWNLOADER,
                 "Starting data download and extraction"
             )
             
-            torrent_url = self.config.get_required('data_source.torrent_url')
+            # torrent_url = self.config.get_required('data_source.torrent_url')
+            magnet_link = self.config.get_required('data_source.magnet_link')
             
             # Download dataset
-            downloaded_file = self.downloader.download_dataset(torrent_url)
+            # downloaded_file = self.downloader.download_dataset(torrent_url)
+            downloaded_file = self.downloader.download_from_torrent(magnet_link)
             
             # Extract files
             extracted_files = self.downloader.extract_files(downloaded_file)

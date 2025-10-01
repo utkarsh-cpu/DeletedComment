@@ -144,7 +144,8 @@ class ConfigLoader:
         """Validate that all required configuration is present and valid."""
         # Required configuration keys
         required_keys = [
-            'data_source.torrent_url',
+            # 'data_source.torrent_url',
+            'data_source.magnet_link',
             'storage.output_path',
             'processing.chunk_size',
             'google_drive.credentials_path'
@@ -301,6 +302,7 @@ class ConfigLoader:
             },
             'data_source': {
                 'torrent_url': '',
+                'magnet_link': '',
                 'download_path': './data/raw',
                 'extract_path': './data/extracted',
                 'verify_checksums': True,
