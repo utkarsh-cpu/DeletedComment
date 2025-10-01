@@ -56,3 +56,5 @@ logs/*
 *.temp
 .DS_Store
 Thumbs.db
+
+.kiro
